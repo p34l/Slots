@@ -52,7 +52,14 @@ class ReelsAnimationManager {
         let reelIndex = reel.tag
         setupInitialAnimationState(for: reel, at: reelIndex)
 
-        startSlowPhase(reel: reel, reelIndex: reelIndex, stopDelay: stopDelay, targetSymbol: targetSymbol, duration: duration, completion: completion)
+        startSlowPhase(
+            reel: reel,
+            reelIndex: reelIndex,
+            stopDelay: stopDelay,
+            targetSymbol: targetSymbol,
+            duration: duration,
+            completion: completion
+        )
     }
 
     private func setupInitialAnimationState(for reel: UICollectionView, at reelIndex: Int) {
@@ -73,18 +80,24 @@ class ReelsAnimationManager {
         duration: TimeInterval,
         completion: @escaping () -> Void
     ) {
-        var slowCounter = 0
         let slowSteps = Int(AnimationConstants.slowDuration / AnimationConstants.slowInterval)
-
-        Timer.scheduledTimer(withTimeInterval: AnimationConstants.slowInterval, repeats: true) { timer in
-            slowCounter += 1
-            self.updateRandomSymbols(reelIndex: reelIndex, excludeTarget: true)
-            reel.reloadData()
-
-            if slowCounter >= slowSteps {
-                timer.invalidate()
-                self.startFastPhase(reel: reel, reelIndex: reelIndex, stopDelay: stopDelay, targetSymbol: targetSymbol, duration: duration, completion: completion)
-            }
+        startPhase(
+            reel: reel,
+            reelIndex: reelIndex,
+            stopDelay: stopDelay,
+            targetSymbol: targetSymbol,
+            duration: duration,
+            interval: AnimationConstants.slowInterval,
+            steps: slowSteps
+        ) {
+            self.startFastPhase(
+                reel: reel,
+                reelIndex: reelIndex,
+                stopDelay: stopDelay,
+                targetSymbol: targetSymbol,
+                duration: duration,
+                completion: completion
+            )
         }
     }
 
@@ -96,18 +109,23 @@ class ReelsAnimationManager {
         duration: TimeInterval,
         completion: @escaping () -> Void
     ) {
-        var fastCounter = 0
         let fastSteps = Int(AnimationConstants.fastDuration / AnimationConstants.fastInterval)
-
-        Timer.scheduledTimer(withTimeInterval: AnimationConstants.fastInterval, repeats: true) { timer in
-            fastCounter += 1
-            self.updateRandomSymbols(reelIndex: reelIndex, excludeTarget: true)
-            reel.reloadData()
-
-            if fastCounter >= fastSteps {
-                timer.invalidate()
-                self.startSlowDownPhase(reel: reel, reelIndex: reelIndex, stopDelay: stopDelay, targetSymbol: targetSymbol, completion: completion)
-            }
+        startPhase(
+            reel: reel,
+            reelIndex: reelIndex,
+            stopDelay: stopDelay,
+            targetSymbol: targetSymbol,
+            duration: duration,
+            interval: AnimationConstants.fastInterval,
+            steps: fastSteps
+        ) {
+            self.startSlowDownPhase(
+                reel: reel,
+                reelIndex: reelIndex,
+                stopDelay: stopDelay,
+                targetSymbol: targetSymbol,
+                completion: completion
+            )
         }
     }
 
@@ -118,19 +136,61 @@ class ReelsAnimationManager {
         targetSymbol: SlotSymbol,
         completion: @escaping () -> Void
     ) {
-        var slowDownCounter = 0
         let slowDownSteps = Int(AnimationConstants.slowDownDuration / AnimationConstants.slowDownInterval)
+        startPhase(
+            reel: reel,
+            reelIndex: reelIndex,
+            stopDelay: stopDelay,
+            targetSymbol: targetSymbol,
+            duration: AnimationConstants.slowDownDuration,
+            interval: AnimationConstants.slowDownInterval,
+            steps: slowDownSteps
+        ) {
+            self.finishAnimation(
+                reel: reel,
+                reelIndex: reelIndex,
+                stopDelay: stopDelay,
+                targetSymbol: targetSymbol,
+                completion: completion
+            )
+        }
+    }
 
-        Timer.scheduledTimer(withTimeInterval: AnimationConstants.slowDownInterval, repeats: true) { timer in
-            slowDownCounter += 1
+    private func startPhase(
+        reel: UICollectionView,
+        reelIndex: Int,
+        stopDelay: TimeInterval,
+        targetSymbol: SlotSymbol,
+        duration: TimeInterval,
+        interval: TimeInterval,
+        steps: Int,
+        nextPhase: @escaping () -> Void
+    ) {
+        var counter = 0
+        let queue = DispatchQueue(label: "reel.animation.\(reelIndex)", qos: .userInteractive)
+
+        let timer = DispatchSource.makeTimerSource(queue: queue)
+        timer.schedule(deadline: .now(), repeating: interval)
+
+        timer.setEventHandler { [weak self] in
+            guard let self else { return }
+            counter += 1
+
             self.updateRandomSymbols(reelIndex: reelIndex, excludeTarget: true)
-            reel.reloadData()
 
-            if slowDownCounter >= slowDownSteps {
-                timer.invalidate()
-                self.finishAnimation(reel: reel, reelIndex: reelIndex, stopDelay: stopDelay, targetSymbol: targetSymbol, completion: completion)
+            DispatchQueue.main.async {
+                reel.reloadData()
+            }
+
+            if counter >= steps {
+                timer.cancel()
+                DispatchQueue.main.async {
+                    nextPhase()
+                }
             }
         }
+
+        timer.resume()
     }
 
     private func finishAnimation(
