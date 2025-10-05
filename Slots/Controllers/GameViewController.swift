@@ -134,8 +134,7 @@ class GameViewController: UIViewController {
         spinButton.setEnabled(false)
         spinToWinButton.setEnabled(false)
         resultLabel.hideResult()
-        
-        // Звук початку гри
+
         SoundManager.shared.playSound(.gameStart)
 
         let result = gameModel.spin()
@@ -147,12 +146,12 @@ class GameViewController: UIViewController {
 
     @objc private func spinToWinButtonTapped() {
         guard !isSpinning else { return }
-        
+
         isSpinning = true
         spinButton.setEnabled(false)
         spinToWinButton.setEnabled(false)
         resultLabel.hideResult()
-        
+
         spinUntilWin()
     }
 
@@ -160,8 +159,7 @@ class GameViewController: UIViewController {
         updateScore()
         resultLabel.showResult(result.message, isWin: result.isWin)
         updateSpinHistory()
-        
-        // Звукові ефекти та анімація при перемозі
+
         if result.isWin {
             SoundManager.shared.playSound(.win)
             reelsView.startWinAnimation()
@@ -175,19 +173,17 @@ class GameViewController: UIViewController {
     }
 
     private func spinUntilWin() {
-        // Звук гри при кожному спіні
         SoundManager.shared.playSound(.gameStart)
-        
+
         let result = gameModel.spin()
-        
+
         reelsView.spinReels(to: result.symbols) { [weak self] in
             guard let self = self else { return }
-            
+
             self.updateScore()
             self.updateSpinHistory()
-            
+
             if result.isWin {
-                // Виграли - показуємо результат, звук та анімацію
                 self.resultLabel.showResult(result.message, isWin: result.isWin)
                 SoundManager.shared.playSound(.win)
                 self.reelsView.startWinAnimation()
@@ -195,7 +191,6 @@ class GameViewController: UIViewController {
                 self.spinButton.setEnabled(true)
                 self.spinToWinButton.setEnabled(true)
             } else {
-                // Не виграли - показуємо повідомлення, звук та крутимо далі
                 self.resultLabel.showResult(result.message, isWin: result.isWin)
                 SoundManager.shared.playSound(.lose)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {

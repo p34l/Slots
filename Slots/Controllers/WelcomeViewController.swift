@@ -19,7 +19,7 @@ class WelcomeViewController: UIViewController {
 
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Slots"
+        label.text = "Слоти"
         label.font = UIFont.systemFont(ofSize: 36, weight: .bold)
         label.textColor = .white
         label.textAlignment = .center
@@ -48,11 +48,10 @@ class WelcomeViewController: UIViewController {
         addTargetPlayButton()
         title = "Slots"
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // Configure navigation bar appearance
+
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         navigationController?.navigationBar.barTintColor = .clear
@@ -99,4 +98,3 @@ class WelcomeViewController: UIViewController {
         ])
     }
 }
-

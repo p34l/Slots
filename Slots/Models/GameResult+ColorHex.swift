@@ -24,7 +24,6 @@ struct GameResult {
         message = isWin ? "Перемога!" : "Не пощастило!"
     }
 
-    // Custom initializer for loading from UserDefaults
     init(symbols: [SlotSymbol], isWin: Bool, pointsChange: Int, message: String) {
         self.symbols = symbols
         self.isWin = isWin
@@ -33,7 +32,7 @@ struct GameResult {
     }
 }
 
-// MARK: - UIColorHex Extension
+// MARK: - UIColorHex
 
 extension UIColor {
     convenience init?(hex: String, alpha: CGFloat = 1.0) {
