@@ -46,7 +46,6 @@ class WelcomeViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         addTargetPlayButton()
-        title = "Slots"
     }
 
     override func viewWillAppear(_ animated: Bool) {
