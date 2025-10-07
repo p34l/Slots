@@ -78,33 +78,33 @@ class GameViewController: UIViewController {
         NSLayoutConstraint.activate([
             scoreView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             scoreView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            scoreView.widthAnchor.constraint(equalToConstant: 150),
-            scoreView.heightAnchor.constraint(equalToConstant: 80),
+            scoreView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4),
+            scoreView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.12),
 
-            reelsView.topAnchor.constraint(equalTo: scoreView.bottomAnchor, constant: 20),
+            reelsView.topAnchor.constraint(equalTo: scoreView.bottomAnchor, constant: 16),
             reelsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             reelsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            reelsView.heightAnchor.constraint(equalToConstant: 180),
+            reelsView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2),
 
-            resultLabel.topAnchor.constraint(equalTo: reelsView.bottomAnchor, constant: 20),
+            resultLabel.topAnchor.constraint(equalTo: reelsView.bottomAnchor, constant: 16),
             resultLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             resultLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            resultLabel.heightAnchor.constraint(equalToConstant: 60),
+            resultLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.08),
 
-            spinButton.topAnchor.constraint(equalTo: resultLabel.bottomAnchor, constant: 20),
+            spinButton.topAnchor.constraint(equalTo: resultLabel.bottomAnchor, constant: 16),
             spinButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            spinButton.widthAnchor.constraint(equalToConstant: 200),
-            spinButton.heightAnchor.constraint(equalToConstant: 50),
+            spinButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
+            spinButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.06),
 
-            spinToWinButton.topAnchor.constraint(equalTo: spinButton.bottomAnchor, constant: 15),
+            spinToWinButton.topAnchor.constraint(equalTo: spinButton.bottomAnchor, constant: 12),
             spinToWinButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            spinToWinButton.widthAnchor.constraint(equalToConstant: 200),
-            spinToWinButton.heightAnchor.constraint(equalToConstant: 50),
+            spinToWinButton.widthAnchor.constraint(equalTo: spinButton.widthAnchor),
+            spinToWinButton.heightAnchor.constraint(equalTo: spinButton.heightAnchor),
 
-            spinHistoryView.topAnchor.constraint(equalTo: spinToWinButton.bottomAnchor, constant: 40),
+            spinHistoryView.topAnchor.constraint(equalTo: spinToWinButton.bottomAnchor, constant: 24),
             spinHistoryView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             spinHistoryView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            spinHistoryView.heightAnchor.constraint(equalToConstant: 200),
+            spinHistoryView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.15),
             spinHistoryView.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
         ])
     }
